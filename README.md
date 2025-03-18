@@ -12,7 +12,7 @@ open your teminal, run below command.
 
 ```bash
 cd <your_work_dir>
-git clone git@github.com:JoshWang3/Chuwa20241209.git
+git clone git@github.com:JoshWang3/Chuwa20250317.git
 ```
 
 ### 2. Send your github email address to me on Teams and I will add you to this repo
