@@ -46,10 +46,10 @@ class MathOperations {
 public class Main {
     public static void main(String[] args) {
         MathOperations m = new MathOperations();
-		int x = m.add(1, 2);
-		double y = m.add(0.3d, 0.71d);
-		int z = m.add(1, 2, 3);
-		System.out.println("x: " + x + "\ny: " + y + "\nz: " + z);
+	int x = m.add(1, 2);
+	double y = m.add(0.3d, 0.71d);
+	int z = m.add(1, 2, 3);
+	System.out.println("x: " + x + "\ny: " + y + "\nz: " + z);
     }
 }
 ```
@@ -72,9 +72,9 @@ class Dog extends Animal {
 public class Main {
     public static void main(String[] args) {
         Animal dog = new Dog();
-		Animal a = new Animal();
-		dog.sound();
-		a.sound();
+	Animal a = new Animal();
+	dog.sound();
+	a.sound();
     }
 }
 ```
@@ -96,8 +96,8 @@ class Dog extends Animal {
 public class Main {
     public static void main(String[] args) {
         Dog dog = new Dog();
-		dog.bark();
-		dog.eat();
+	dog.bark();
+	dog.eat();
     }
 }
 ```
@@ -108,7 +108,7 @@ public class Main {
     public static void main(String[] args) {
         Integer num = Integer.valueOf(10);
         int pri_num = num.intValue();
-		List<Integer> l = new ArrayList<Integer>();
+	List<Integer> l = new ArrayList<Integer>();
         System.out.println("Wrapper value: " + num);
         System.out.println("Primitive value: " + pri_num);
     }
@@ -147,7 +147,7 @@ public class Main {
 ```
 
 ## 4. String Pool in Java and String Immutability
-- The String Pool is a special memory area in the heap where Java stores string to avoid duplication.
+- The String Pool is a memory area in the heap where Java stores string to avoid duplication.
 - String Immutability means once a `String` object is created, it cannot be changed.
 
 ```java
@@ -391,7 +391,7 @@ public class Main {
 ---
 
 ## 14. Polymorphism in Java
-Implemented via method overloading and overriding.
+Implemented method overloading and overriding.
 
 Example:
 ```java
@@ -423,7 +423,7 @@ public class Main {
 ---
 
 ## 15. Encapsulation in Java
-Encapsulation is achieved using private fields and public methods.
+Encapsulation is using private fields and public methods like setter and getter.
 
 Example:
 ```java
