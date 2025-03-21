@@ -1,0 +1,83 @@
+1. Write up Example code to demonstrate the three fundamental concepts of OOP.
+Encapsulation is one of the important OOP concepts of Java to avoid unwanted access to data, we usually
+use keyword private, setters and getters to realize it.
+
+Polymorphism means different types, in Java we have two kinds of polymorphism, one is in compile time,
+overload, which means we allow multiple methods sharing the same name but with different inputs.
+Another is override, we can override a method defined in its parent class.
+
+Inheritance is like a parent and child relationship, a class can inherit from another class using
+keyword extends Java only supports single inheritance, but we can make multiple inheritance using
+interfaces.
+
+2. What is wrapper data type classes (e.g. Integer, Double) in Java and Why we need wrapper class?
+Wrapper class is to wrap primitive data into objects. Collections don't accept primitives as
+value, so we need wrapper class. And there are some built-in functions we can use.
+
+3. What is the difference between HashMap and HashTable?
+They all store key value pairs. HashTable is thread safe and hashmap is not. Hashtable doesn't
+allow null key or null value bu hashmap can. Due to the thread safety, hashtable performance
+is lower than hashmap. hashtable is not a subclass of collections, and it out of dated.
+
+4. What is String pool in Java and why we need String pool? Explain String immunity.
+String pool is a special memory place in java heap that stores unique string literals.
+When we want to create a new string, java checks the string pool first, it the string
+exits, return the existing reference otherwise create a new string. Since strings are
+immutable and can be reused, string pool can save memory and time. String is immutable
+once it's created we cannot modify it.
+
+5. Explain garbage collection? Explain types of garbage collection.
+Java's JVM automatically remove unused or unreachable objects to save memory and to improve
+performance. So we don't have to do it manually. Serial garbage collector: use one thread to
+perform garbage collection and is suitable for small applications. Parallel garbage collector:
+use multiple threads for garbage collection and is suitable for projects that need high
+throughput. CMS garbage collector: It does garbage collection concurrently with application
+threads and is suitable for web server. G1 garbage collector: a region of heap to collect
+garbage incrementally, it reduces stop the world pauses but require high gpu overhead.
+
+6. What are access modifiers and their scopes in Java?
+Access modifier defines the accessibility of fields, class, methods. Public means any class can
+get access to it, private means only the current class can get access to it, protected means any
+class in the package and subclasses can get access to it. Default means classes in the package can
+get access to it.
+
+7. Explain final key word? (Filed, Method, Class)
+Final means after we create it, we cannot modify it. A final class means it cannot be inherited.
+A final variable means we cannot reassign it. A final methods means we cannot override it.
+
+8. Explain static keyword? (Filed, Method, Class). When do we usually use it?
+Static keywords means it belongs to a class not a specific object. A static class cannot be
+instantiated. A static variable is shared by all instances of the class. A static method belongs
+to the class but not a instance and cannot access to the non-static variables or methods directly.
+
+9. What is the differences between overriding and overloading?
+Refer to Q1.
+
+10. Explain how Java defines a method signature, and how it helps on overloading and overriding.
+Method signatures include method name and parameter list. Overloading happens when methods have
+same name but different parameter list. Overriding allows to override a method in parent class
+that has the same signature.
+
+11. What is the differences between super and this?
+This refers to the current instance, but super refers to the parent instance.
+
+12. Explain how equals and hashCode work.
+Equals is to compare whether two elements are the same. We can override equal based our own needs
+but should also override hashcode, if we want to elements to be equal, they must have the same hashcode.
+
+13. What is the Java load sequence?
+Java load sequence refers to the order in which Java loads, links and initialize classes.
+Class loading is lazy, they are loaded only when they are first referenced. A parent class
+is always load before child.
+
+14. What is Polymorphism ? And how Java implements it ?
+Refer to Q1.
+
+15. What is Encapsulation ? How Java implements it? And why we need encapsulation?
+Refer to Q1.
+
+16. Compare interface and abstract class with use cases.
+Single inheritance for abstract class but can implement multiple interfaces. Interface defines some
+methods the class must implement, abstract is like a blueprint. Abstract class can have constructor,
+have both abstract methods and concrete methods. And we can clarify different access modifier. Interfaces
+cannot be instantiated, all fields are public.
