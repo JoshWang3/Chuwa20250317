@@ -481,16 +481,16 @@ public class Main {
 }
 ```
 ### 15. What is **Encapsulation** ? How Java implements it? And why we need encapsulation?
-Encapsulation means to bind the data and the methods in a single class. It makes the rules for the others from the outside to manipulate the data.  
-Java implements encapsulation through the following mechanisms:  
-1. Private access modifier
-2. Public Getter and Setter methods  
+- Encapsulation means to bind the data and the methods in a single class. It makes the rules for the others from the outside to manipulate the data.
+- Java implements encapsulation through the following mechanisms:  
+    1. Private access modifier
+    2. Public Getter and Setter methods  
 
-We use encapsulation to:  
-1. Increase flexibility and maintenance
-2. Improve data integrity
-3. Enhance security
-4. Improve reusability
+- We use encapsulation to:  
+    1. Increase flexibility and maintenance
+    2. Improve data integrity
+    3. Enhance security
+    4. Improve reusability
 ```java
 class Employee {
 
@@ -522,6 +522,7 @@ public class Main {
 | Constructor | Can't have constructor | Can have constructor |
 | Inheritance | A class can implement multiple interfaces | A class can extend only one abstract class |
 | Access Modifiers | Methods are `public` by default | Methods can have any access modifier |
+
 **Interface**:
 ```java
 interface Flyable {
