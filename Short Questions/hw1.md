@@ -568,7 +568,7 @@ public class Main {
     public static void main(String[] args) {
         Animal dog = new Dog();
         dog.eat();      // Output: This animal eats food
-        dog.makeSound();// Output: This animal eats food
+        dog.makeSound();// Output: Bark
         Animal cat = new Cat();
         cat.eat();      // Output: This animal eats food
         cat.makeSound();// Output: Meow
