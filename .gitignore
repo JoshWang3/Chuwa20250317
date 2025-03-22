@@ -1,0 +1,44 @@
+# macOS-specific files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Java build files
+*.class
+*.jar
+*.war
+*.ear
+
+# Eclipse project files
+*.classpath
+*.project
+*.settings/
+
+# IntelliJ IDEA project files
+*.iml
+.idea/
+out/
+
+# Maven
+target/
+
+# Gradle
+.gradle/
+build/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# VSCode
+.vscode/
+
+# Other OS junk
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
