@@ -1,0 +1,64 @@
+2. Checked Exception VS unChecked Exception
+CheckedExceptions are compile time exceptions, we must handle the exceptions either using try catch
+or declaring throws. If we use try catch, we run the code that might throw exception inside try
+block, and we define how we want to handle it inside catch block. Or we can declare throws keyword
+in the method signature to indicate that when we call the method, we must handle the exception.
+Typical checkedExceptions are:IOException，FileNotFoundException, SOLException.
+
+Unchecked exceptions are runtime exceptions. They are more common than checked exceptions, we don't
+have to handle them using try/catch. Instead, we change the code directly to solve the programming bugs.
+
+3. Can there be multiple finally blocks? Can there be multiple catch blocks?
+No, there can not be multiple finally blocks. But we can have multiple catch blocks to handle different
+types of exceptions. Exceptions are evaluated top-down, if an exception is caught, the rest would be
+ignored. So more specific exceptions should come first.
+
+4. When both catch and finally return values, what will be the final result?
+When both catch and finally return values， the value in finally block would be the final result.
+
+5. What is the difference between throw and throws?
+Throw is to explicitly throw an exception. Throws is declared in method signature indicating that the method
+might throw an exception.
+
+6. Run the below three pieces codes, Noticed the printed exceptions. why do we put the Null/Runtime
+exception before Exception ?
+For the code inside try block, if we encounter with an exception, all the rest of code in try will be ignored,
+and directly throws an exception. We put the Null/Runtime exception before Exception because they are more
+specific and the exceptions are evaluated top down.
+
+7. What is optional? why do you use it? write an optional example to demo how it avoids NPE.
+Optional is a container that may or may not contain a null value. It is mainly used to avoid null pointer
+exception. And improve code readability to clearly show when a variable can be null.
+
+8. What are the types of design patterns in Java ? Name popular design patters, particularly Creational
+Patterns and Structural Patterns。
+Creational Patterns: Factory Method, Abstract Factory, Singleton, Builder, Prototype.
+Structural Patterns: Adapter, Bridge, Composite, Decorator, facade, flyweight, proxy
+Behavioral Patterns: Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer
+
+9. Implement Singleton , Factory , and Builder patterns, explain how to guarantee thread-safe in your
+singleton pattern implementation.
+Singleton only allows one instance for a class. In order to implement it, we should first create a static
+variable instance of the class, and make the constructor private, and then have a method that checks
+whether the instance already exists, otherwise creates the instance. To guarantee thread-safe, we can use
+synchronized to the creation method, or we can use double checked locking.
+
+10. Explain SOLID Principles ? Further explain Open-Closed Principle (OCP) ?
+S - Single Responsibility Principle (SRP): A class should have only one reason to change, meaning it should
+have only one job or responsibility.
+O - Open-Closed Principle (OCP): A class should be open for extension but closed for modification.This means
+that the behavior of a class can be extended, but the class itself should not be changed.
+L - Liskov Substitution Principle (LSP): Objects of a superclass should be replaceable with objects of a
+subclass without affecting the correctness of the program.
+I - Interface Segregation Principle (ISP):
+A client should not be forced to implement interfaces it does not use. It's better to have several smaller,
+more specific interfaces than a large, general-purpose one.
+D - Dependency Inversion Principle (DIP): High-level modules should not depend on low-level modules.
+Abstractions should not depend on details.
+
+11. A
+
+
+
+
+
