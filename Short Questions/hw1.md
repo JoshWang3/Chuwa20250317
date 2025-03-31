@@ -1,4 +1,4 @@
-## Short Questions
+# HW1
 ### 1. Write up Example code to demonstrate the three foundmental concepts of OOP.
    - Encapsulation: bundle variables and methods into a single class. Hide data by using private variables and controlled access via getter and setter.
    - Inheritance: Allows a subclass interit properties and behaviors from superclass. Java allows extend only single abstract class or regular concrete class, but allows implements multiple interfaces. 

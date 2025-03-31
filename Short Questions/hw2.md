@@ -1,5 +1,5 @@
 # HW2
-## 1 - 1. Practice Collections
+ 1 - 1. Practice Collections
 [Open Foler](../Coding/hw2/Practice_Collection_and_Array/collection/)
 - [x] ArrayList  
 - [x] LinkedList  
@@ -13,7 +13,7 @@
 - [x] Arrays  
 - [x] Collections  
 ----
-## 1- 2. Assignment con't: additional coding questions, MUST use java stream api to resolve, please submit to "coding practice" channel in the same way you submit normal coding questions.
+ 1- 2. Assignment con't: additional coding questions, MUST use java stream api to resolve, please submit to "coding practice" channel in the same way you submit normal coding questions.
 [Open Foler](../Coding/hw2/StreamAPI_on_LeetCodePractice/)
 1. Two Sum
 2. Group Anagrams
@@ -21,7 +21,7 @@
 4. Longest Word in Dictionary
 5. Missing number
 ----
-## 2. Write code to compare and explain checkedException vs uncheckedException
+ 2. Write code to compare and explain checkedException vs uncheckedException
  - checked exception: forced handle by `try-catch` by compiler, caused by external dependencies
  - unchecked exception: not forced to handle, can compile, but crash programming at runtime, have to fix
 ```java
@@ -41,7 +41,7 @@ public class Main {
 }
 ```
 ----
-## 3. Can there be multiple finally blocks? Can there be multiple catch blocks? Write code to explain.
+ 3. Can there be multiple finally blocks? Can there be multiple catch blocks? Write code to explain.
 - No, only one finally block
 - Yes, can have mulitple catch to handle different exception types
 ```java
@@ -78,7 +78,7 @@ public class Main {
     }
 ```
 ----
-## 4. When both catch and finally return values, what will be the final result?
+ 4. When both catch and finally return values, what will be the final result?
 - finally will be the final result, since finally block executes last, after try-catch block, its return value will override anything previous returend from `try` or `catch`
 ```java
     public static void main(String[] args) {
@@ -98,7 +98,7 @@ public class Main {
     }
 ```
 ----
-## 5. What is the difference between throw and throws?
+ 5. What is the difference between throw and throws?
   - `throws` used in method signiture to declare exception
   - `throw` used manually throws an exception in method
   ```java
@@ -110,7 +110,7 @@ public class Main {
   }
   ```
   ----
-## 6. Run the below three pieces codes, Noticed the printed exceptions. why do we put the Null/Runtime exception before Exception ?
+ 6. Run the below three pieces codes, Noticed the printed exceptions. why do we put the Null/Runtime exception before Exception ?
   - Since Java checks `catch` blocks top-down, it executes the first matching exception. If a parent class like `Exception` comes first, it's a kind of sytax error, it will catch everything, and the more specific exceptions will be unreachable.
 ```java
 public class Main {
@@ -185,7 +185,7 @@ public class Main {
 // RuntimeException
 ```
 ----
-7. What is optional? why do you use it? write an optional example to demo how it avoids NPE.
+ 7. What is optional? why do you use it? write an optional example to demo how it avoids NPE.
   - Optional is a final concrete class, used to handle NPE
   ```java
       public static void main(String[] args) {
@@ -203,7 +203,7 @@ public class Main {
     }
   ```
 ----
-8. What are the types of design patterns in Java ? Name popular design patters, particularly Creational Patterns and Structural Patterns
+ 8. What are the types of design patterns in Java ? Name popular design patters, particularly Creational Patterns and Structural Patterns
   - Creational Patterns
     - Singleton
     - Factory
@@ -214,7 +214,7 @@ public class Main {
     - Composite
   - Behaviroal Patterns
 ----
-9.  Implement Singleton, Factory, and Builer patterns, explain how to guarantee thread-safe in your singleton pattern implementation.
+ 9.  Implement Singleton, Factory, and Builer patterns, explain how to guarantee thread-safe in your singleton pattern implementation.
 ```java
 // Singleton
 // Thread-Safe Version
@@ -320,7 +320,7 @@ public class Test {
 }
 ```
 ----
-10.  Explain SOLID Principles ? Further explain Open-Closed Principle (OCP) ?
+ 10.  Explain SOLID Principles ? Further explain Open-Closed Principle (OCP) ?
 - Single Respoinsibility
 - Open-Close 
   - Code should be open for extension, but closed for modification.
@@ -328,7 +328,7 @@ public class Test {
 - Interface Segregation
 - Dependency Inversion
 ----
-11. Liskov’s substitution principle states that if class B is a subtype of class A, then object of type A may be
+ 11. Liskov’s substitution principle states that if class B is a subtype of class A, then object of type A may be
 substituted with any object of type B. What does this actually mean? (from OA ) choose your answer.
       1. It mean that if the object of type A can do something, the object of type B could also be able tp
 perform the same thing ✅
@@ -338,7 +338,7 @@ type B could substitute object of type A.
       4. It means that for the class B to inherit class A, objects of type B and objects of type A must be same.
 ----
 
-12.    Watch design pattern video as below.
+ 12.    Watch design pattern video as below.
 - singleton: https://www.bilibili.com/video/BV1Np4y1z7BU?p=22
 - Factory: https://www.bilibili.com/video/BV1Np4y1z7BU?p=35&vd_source=310561eab1216a27f7accf859bf7f6d9
 - Builder: https://www.bilibili.com/video/BV1Np4y1z7BU?p=50&vd_source=310561eab1216a27f7accf859bf7f6d9
