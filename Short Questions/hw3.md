@@ -490,14 +490,98 @@
     **Object lock** (instance lock):
 
     - Locks a specific instance of a class
-
     - Uses synchronized instance method or synchronized(this) block
-
     - Only one thread can execute any synchronized instance method on the same object
-
     - Different object instances have independent locks
 
-      
+    ```java
+    class ClassLockDemo {
+        // synchronized static method (Class Lock)
+        public static synchronized void printNumbers(String threadName) {
+            System.out.println(threadName + " started (class lock).");
+            for (int i = 1; i <= 5; i++) {
+                System.out.println(threadName + ": " + i);
+                try { Thread.sleep(100); } catch (InterruptedException e) { }
+            }
+            System.out.println(threadName + " ended (class lock).\n");
+        }
+    }
+    
+    public class Main {
+        public static void main(String[] args) {
+            Thread t1 = new Thread(() -> ClassLockDemo.printNumbers("Thread 1"));
+            Thread t2 = new Thread(() -> ClassLockDemo.printNumbers("Thread 2"));
+    
+            t1.start();
+            t2.start();
+        }
+    }
+    ```
+
+    ```tex
+    Thread 1 started (class lock).
+    Thread 1: 1
+    Thread 1: 2
+    Thread 1: 3
+    Thread 1: 4
+    Thread 1: 5
+    Thread 1 ended (class lock).
+    
+    Thread 2 started (class lock).
+    Thread 2: 1
+    Thread 2: 2
+    Thread 2: 3
+    Thread 2: 4
+    Thread 2: 5
+    Thread 2 ended (class lock).
+    ```
+
+    ```java
+    class ObjectLockDemo {
+        // synchronized instance method (Object Lock)
+        public synchronized void printNumbers(String threadName) {
+            System.out.println(threadName + " started (object lock).");
+            for (int i = 1; i <= 5; i++) {
+                System.out.println(threadName + ": " + i);
+                try { Thread.sleep(100); } catch (InterruptedException e) { }
+            }
+            System.out.println(threadName + " ended (object lock).\n");
+        }
+    }
+    
+    public class Main {
+        public static void main(String[] args) {
+            ObjectLockDemo obj1 = new ObjectLockDemo();
+            ObjectLockDemo obj2 = new ObjectLockDemo();
+    
+            Thread t1 = new Thread(() -> obj1.printNumbers("Thread 1"));
+            Thread t2 = new Thread(() -> obj2.printNumbers("Thread 2"));
+    
+            t1.start();
+            t2.start();
+        }
+    }
+    ```
+
+    ```tex
+    Thread 2 started (object lock).
+    Thread 1 started (object lock).
+    Thread 2: 1
+    Thread 1: 1
+    Thread 2: 2
+    Thread 1: 2
+    Thread 2: 3
+    Thread 1: 3
+    Thread 2: 4
+    Thread 1: 4
+    Thread 2: 5
+    Thread 1: 5
+    Thread 2 ended (object lock).
+    
+    Thread 1 ended (object lock).
+    ```
+
+    
 
 11. What is `join()` method?
 
@@ -540,7 +624,7 @@
 
     
 
-12. what is `yield()` method?
+12. What is `yield()` method?
 
     The `yield()` method causes the currently executing thread to temporarily pause and allow other threads of the same priority to execute.
 
@@ -882,9 +966,9 @@
 
     
 
-17. Difference between shutdown() and shutdownNow() methods of executor
+17. Difference between `shutdown()` and `shutdownNow()` methods of executor
 
-    | Feature             | shutdown()        | shutdownNow()               |
+    | Feature             | `shutdown()`      | `shutdownNow()`             |
     | ------------------- | ----------------- | --------------------------- |
     | **Task Acceptance** | Rejects new tasks | Rejects new tasks           |
     | **Running Tasks**   | Allows completion | Attempts to interrupt       |
@@ -893,18 +977,96 @@
     | **Speed**           | Gradual shutdown  | Immediate shutdown attempt  |
     | **Interruption**    | No interruption   | Sends interrupts to threads |
 
+    ```java
+    import java.util.List;
+    import java.util.concurrent.ExecutorService;
+    import java.util.concurrent.Executors;
+    import java.util.concurrent.TimeUnit;
+    
+    public class Main {
+        public static void main(String[] args) throws InterruptedException {
+            System.out.println("Testing shutdown():");
+            testShutdown();
+    
+            System.out.println("\nTesting shutdownNow():");
+            testShutdownNow();
+        }
+    
+        // Demonstrate shutdown()
+        private static void testShutdown() throws InterruptedException {
+            ExecutorService executor = Executors.newFixedThreadPool(2);
+            
+            executor.submit(task("Task 1"));
+            executor.submit(task("Task 2"));
+            
+            // Initiates an orderly shutdown (waits for tasks to complete)
+            executor.shutdown();
+            
+            boolean terminated = executor.awaitTermination(5, TimeUnit.SECONDS);
+            System.out.println("Executor terminated gracefully: " + terminated);
+        }
+    
+        // Demonstrate shutdownNow()
+        private static void testShutdownNow() throws InterruptedException {
+            ExecutorService executor = Executors.newFixedThreadPool(2);
+    
+            executor.submit(task("Task 1"));
+            executor.submit(task("Task 2"));
+            executor.submit(task("Task 3"));
+            
+            // Attempts immediate shutdown (may interrupt tasks)
+            List<Runnable> notStartedTasks = executor.shutdownNow();
+            
+            System.out.println("Tasks never started: " + notStartedTasks.size());
+            
+            boolean terminated = executor.awaitTermination(5, TimeUnit.SECONDS);
+            System.out.println("Executor terminated immediately: " + terminated);
+        }
+    
+        // Simple task simulation
+        private static Runnable task(String name) {
+            return () -> {
+                try {
+                    System.out.println(name + " started.");
+                    Thread.sleep(2000); // simulate work
+                    System.out.println(name + " completed.");
+                } catch (InterruptedException e) {
+                    System.out.println(name + " interrupted.");
+                }
+            };
+        }
+    }
+    ```
+
+    ```tex
+    Testing shutdown():
+    Task 2 started.
+    Task 1 started.
+    Task 1 completed.
+    Task 2 completed.
+    Executor terminated gracefully: true
+    
+    Testing shutdownNow():
+    Task 1 started.
+    Task 2 started.
+    Task 1 interrupted.
+    Task 2 interrupted.
+    Tasks never started: 1
+    Executor terminated immediately: true
+    ```
+
+    
+
 18. What is Atomic classes? How many types of Atomic classes? Give me some code example of Atomic  classes and its main methods. when to use it?
 
-    Atomic classes in Java are thread-safe classes that support lock-free, atomic operations on single variables. They are part of the `java.util.concurrent.atomic` package and use low-level processor instructions like Compare-And-Swap (CAS) instead of synchronization blocks for better performance.
-
-    The main types of Atomic classes in Java are:
+    Atomic classes in Java are thread-safe classes that support lock-free, atomic operations on single variables. They are part of the `java.util.concurrent.atomic` package and use low-level processor instructions like Compare-And-Swap (CAS) instead of synchronization blocks for better performance. The main types of Atomic classes in Java are:
 
     1. **Basic atomic types**: `AtomicInteger`, `AtomicLong`, `AtomicBoolean`
     2. **Array atomic types**: `AtomicIntegerArray`, `AtomicLongArray`, `AtomicReferenceArray`
     3. **Reference atomic types**: `AtomicReference`, `AtomicStampedReference`, `AtomicMarkableReference`
     4. **Field updater types**: `AtomicIntegerFieldUpdater`, `AtomicLongFieldUpdater`, `AtomicReferenceFieldUpdater`
     5. **Accumulators** (Java 8): `DoubleAccumulator`, `DoubleAdder`, `LongAccumulator`, `LongAdder`
-
+    
     ```java
     import java.util.concurrent.atomic.*;
     import java.util.concurrent.*;
@@ -960,7 +1122,7 @@
         }
     }
     ```
-
+    
     ```tex
     Final count: 10000
     Update successful: true
@@ -969,7 +1131,7 @@
     After: value = 200, stamp = 1, update successful: true
     Adder sum: 100
     ```
-
+    
     Main methods of Atomic classes include:
 
     - `get()`: Returns current value
@@ -979,16 +1141,16 @@
     - `incrementAndGet()`, `decrementAndGet()`: Atomic increment/decrement with result
     - `getAndIncrement()`, `getAndDecrement()`: Atomic increment/decrement with old value
     - `addAndGet(delta)`, `getAndAdd(delta)`: Atomic add operations
+    
+      Use Atomic classes when:
 
-    Use Atomic classes when:
+      - You need thread-safe counters or sequence generators
 
-    - You need thread-safe counters or sequence generators
+      - You need to update object fields atomically
 
-    - You need to update object fields atomically
+      - You need high-performance alternatives to synchronized blocks
 
-    - You need high-performance alternatives to synchronized blocks
-
-    - You need to address the ABA problem in concurrent algorithms
+      - You need to address the ABA problem in concurrent algorithms
 
      
 
@@ -1018,9 +1180,9 @@
 
     - **LinkedBlockingDeque**: Optionally bounded blocking deque based on linked nodes
 
-    **ConcurrentSkipListMap**: A concurrent NavigableMap implementation based on skip lists.
+    - **ConcurrentSkipListMap**: A concurrent NavigableMap implementation based on skip lists.
 
-    **ConcurrentSkipListSet**: A concurrent NavigableSet implementation based on ConcurrentSkipListMap.
+    - **ConcurrentSkipListSet**: A concurrent NavigableSet implementation based on ConcurrentSkipListMap.
 
     ```java
     import java.util.concurrent.*;
@@ -1341,7 +1503,7 @@
        }
        ```
        
-    ```tex
+       ```tex
        Thread-0: 1
        Thread-1: 2
        Thread-0: 3
@@ -1353,7 +1515,6 @@
        Thread-0: 9
        Thread-1: 10
        ```
-       
     
 24. create 3 threads, one thread ouput 1-10, one thread output 11-20, one thread output 21-30. threads run  sequence is random. (solution is in com.chuwa.exercise.t08_multithreading.PrintNumber1)
 
