@@ -232,44 +232,7 @@ class ResourceB {
 }
 ```
 ### 9. How do threads communicate each other?
-1. Shared Memory
-```java
-public class Main {
-    public static void main(String[] args) throws InterruptedException {
-        SharedData data = new SharedData();
-        Thread t1 = new Thread(() -> {
-            for (int i = 0; i < 5; i++) {
-                data.increment();
-                try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
-            }
-        });
-        Thread t2 = new Thread(() -> {
-            for (int i = 0; i < 5; i++) {
-                System.out.println(Thread.currentThread().getName() + " reads count: " + data.getCount());
-                try { Thread.sleep(150); } catch (InterruptedException e) { e.printStackTrace(); }
-            }
-        });
-        t1.start();
-        t2.start();
-        t1.join();
-        t2.join();
-    }
-}
-
-class SharedData {
-    private int count = 0;
-
-    public synchronized void increment() {
-        count++;
-        System.out.println(Thread.currentThread().getName() + " incremented count to: " + count);
-    }
-
-    public synchronized int getCount() {
-        return count;
-    }
-}
-```
-2. Inter-thread Signaling (Using `wait()`, `notify()` or `notifyAll()`)
+1. Synchronized (Using `wait()`, `notify()` or `notifyAll()`)
 ```java
 public class Main {
     public static void main(String[] args) throws InterruptedException {
@@ -288,7 +251,7 @@ public class Main {
             try {
                 for (int i = 0; i < 5; i++) {
                     buffer.consume();
-                    Thread.sleep(150);
+                    Thread.sleep(50);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -326,6 +289,77 @@ class SharedBuffer {
     }
 }
 ```
+2. Lock (Using `condition.await()`, `condition.signal()` or `condition.signalAll()`)
+```java
+import java.util.concurrent.locks.*;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        SharedBuffer buffer = new SharedBuffer();
+        Thread producer = new Thread(() -> {
+            try {
+                for (int i = 0; i < 5; i++) {
+                    buffer.produce(i);
+                    Thread.sleep(100);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        Thread consumer = new Thread(() -> {
+            try {
+                for (int i = 0; i < 5; i++) {
+                    buffer.consume();
+                    Thread.sleep(50);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        producer.start();
+        consumer.start();
+        producer.join();
+        consumer.join();
+    }
+}
+
+class SharedBuffer {
+    private final Lock lock = new ReentrantLock();
+    private final Condition condition = lock.newCondition();
+    private int item = -1;
+    private boolean isEmpty = true;
+
+    public void produce(int value) throws InterruptedException {
+        lock.lock();
+        try {
+            while (!isEmpty) {
+                condition.await();
+            }
+            item = value;
+            isEmpty = false;
+            System.out.println("Produced: " + item);
+            condition.signalAll();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public synchronized void consume() throws InterruptedException {
+        lock.lock();
+        try {
+            while (isEmpty) {
+                condition.await();
+            }
+            System.out.println("Consumed: " + item);
+            item = -1;
+            isEmpty = true;
+            condition.signalAll();
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+```
 ### 10. What’s the difference between class lock and object lock?
 | Feature | Runnable | Callable\<T> |
 | --- | --- | --- |
@@ -349,9 +383,11 @@ public class Main {
 class Counter {
     private int count = 0;
 
-    public synchronized void increment() {
-        count++;
-        System.out.println("Count: " + count);
+    public void increment() {
+        synchronized (this) {
+            count++;
+            System.out.println("Count: " + count);
+        }
     }
 }
 ```
@@ -369,9 +405,11 @@ public class Main {
 class Counter {
     private static int count = 0;
 
-    public static synchronized void increment() {
-        count++;
-        System.out.println("Count: " + count);
+    public static void increment() {
+        synchronized (Counter.class) {
+            count++;
+            System.out.println("Count: " + count);
+        }
     }
 }
 ```
@@ -754,6 +792,137 @@ class PrintNumber {
         }
 
         PrintNumber.class.notifyAll();
+    }
+}
+```
+### 25. completable future:
+#### 1. Homework 1: Write a simple program that uses CompletableFuture to asynchronously get the sum and product of two integers, and print the results.
+```java
+import java.util.concurrent.CompletableFuture;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        int a = 5;
+        int b = 10;
+        CompletableFuture<Integer> sum = CompletableFuture.supplyAsync(() -> a + b);
+        CompletableFuture<Integer> product = CompletableFuture.supplyAsync(() -> a * b);
+
+        sum.thenAccept(s -> System.out.println("sum = " + s));
+        product.thenAccept(p -> System.out.println("product = " + p));
+
+        CompletableFuture.allOf(sum, product).join();
+    }
+}
+```
+#### 2. Homework 2: Assume there is an online store that needs to fetch data from three APIs: products, reviews, and inventory. Use CompletableFuture to implement this scenario and merge the fetched data for further processing. (需要找public api去模拟)
+Used fake api: https://jsonplaceholder.typicode.com/
+```java
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+        int userId = 1;
+
+        HttpClient client = HttpClient.newHttpClient();
+        // user = product
+        CompletableFuture<String> userFuture = fetchData(client, "https://jsonplaceholder.typicode.com/users/" + userId);
+        // post = review
+        CompletableFuture<String> postFuture = fetchData(client, "https://jsonplaceholder.typicode.com/posts?userId=" + userId);
+        // album = inventory
+        CompletableFuture<String> albumFuture = fetchData(client, "https://jsonplaceholder.typicode.com/albums?userId=" + userId);
+
+        userFuture.thenAccept(str -> {
+            System.out.println("-------------------------------------- User --------------------------------------");
+            System.out.println(str);
+            System.out.println("----------------------------------------------------------------------------------");
+        });
+        postFuture.thenAccept(str -> {
+            System.out.println("-------------------------------------- Post --------------------------------------");
+            System.out.println(str);
+            System.out.println("----------------------------------------------------------------------------------");
+        });
+        albumFuture.thenAccept(str -> {
+            System.out.println("-------------------------------------- Album -------------------------------------");
+            System.out.println(str);
+            System.out.println("----------------------------------------------------------------------------------");
+        });
+        CompletableFuture.allOf(userFuture, postFuture, albumFuture).join();
+    }
+
+    private static CompletableFuture<String> fetchData(HttpClient client, String url) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .GET()
+                        .build();
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                return response.body();
+            } catch (Exception e) {
+                return "Error fetching data from " + url;
+            }
+        });
+    }
+}
+```
+#### 3. Homework 3: For Homework 2, implement exception handling. If an exception occurs during any API call, return a default value and log the exception information.
+```java
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+        int userId = 1;
+
+        HttpClient client = HttpClient.newHttpClient();
+        // user = product
+        CompletableFuture<String> userFuture = fetchData(client, "https://jsonplaceholder.typicode.com/users/" + userId, "Default User Data");
+        // post = review (Wrong url to trigger exception)
+        CompletableFuture<String> postFuture = fetchData(client, "https://wrong.com/posts?userId=" + userId, "Default Post Data");
+        // album = inventory (Wrong url to trigger exception)
+        CompletableFuture<String> albumFuture = fetchData(client, "https://wrong.com/albums?userId=" + userId, "Default Album Data");
+
+        userFuture.thenAccept(str -> {
+            System.out.println("-------------------------------------- User --------------------------------------");
+            System.out.println(str);
+            System.out.println("----------------------------------------------------------------------------------");
+        });
+        postFuture.thenAccept(str -> {
+            System.out.println("-------------------------------------- Post --------------------------------------");
+            System.out.println(str);
+            System.out.println("----------------------------------------------------------------------------------");
+        });
+        albumFuture.thenAccept(str -> {
+            System.out.println("-------------------------------------- Album -------------------------------------");
+            System.out.println(str);
+            System.out.println("----------------------------------------------------------------------------------");
+        });
+        CompletableFuture.allOf(userFuture, postFuture, albumFuture).join();
+    }
+
+    private static CompletableFuture<String> fetchData(HttpClient client, String url, String defaultValue) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .GET()
+                        .build();
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                return response.body();
+            } catch (Exception e) {
+                System.err.println("Error fetching data from " + url + ": " + e.getMessage());
+                return defaultValue;
+            }
+        });
     }
 }
 ```
