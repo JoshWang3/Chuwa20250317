@@ -1,0 +1,87 @@
+2. Write a thread-safe singleton class
+First we can directly using synchronized keyword in the get method to ensure that only one thread can process
+the getter but the performance is slower. Or we can use double check lock, using class level lock inside the
+getter block and mark the instance as volatile.
+
+3. How to create a new thread(Please also consider Thread Pool approach)?
+extends thread, implements runnable, use lambda expression, use thread pool with executor service.
+
+4. Difference between Runnable and Callable?
+Callable return a result and can throw an exception, it is suitable like api calls.
+Runnable doesn't return a result and can't throw an exception, it is suitable for side effects, like logging.
+
+5. What is the difference between t.start() and t.run()?
+t.start() starts a new thread and run in a separate thread, it can run multiple threads concurrently. t.run()
+run in the current thread and run threads sequentially.
+
+6. Which way of creating threads is better: Thread class or Runnable interface
+Runnable interface is betters. Because Java only support single inheritance of class, so if we extend thread
+class, we can't inherit another class, which may cause some problems for our application logics. The code is
+less flexible than implementing Runnable interface. And runnable interface is better with thread pooling,
+like executorService.
+
+7. What are the thread statuses?
+New - Runnable - Blocked/Waiting/Timed waiting - terminated
+
+8.Demonstrate deadlock and how to resolve it in Java code.
+a. All threads acquire locks in the same order
+b. Use Reentrantlock
+c. Avoid long lock holding
+d. Use tools to detect deadlock
+
+9. How do threads communicate each other?
+a. Synchronized lock:  wait(), notify(), notifyAll()
+b. ReentrantLock: condition.await(), condition.signal, condition.signalAll()
+b. join() to make a thread wait another thread complete
+c. volatile make the data visible for all threads
+d. Future and CompletableFuture
+
+10. What’s the difference between class lock and object lock?
+Class lock applies to the entire class, ensuring thread safe for static methods. Object lock is for an
+instance, ensuring thread safe for instance methods.
+
+11. What is join() method?
+Pause the current thread until the join thread complete.
+
+12. what is yield() method?
+Pause the current thread to give a change the the same or higher priority thread to run. It doesn't
+guarantee the thread order, but just tell cpu that current thread can yield.
+
+13. What is ThreadPool? How many types of ThreadPool? What is the TaskQueue in ThreadPool?
+Thread pool is a pool of reusable threads to efficiently manage tasks. The thread pool maintains a fixed
+number of threads that can be reused. We have FixedThreadPool, CachedThreadPool, SingleThreadExecutor.
+TaskQueue is a queue of tasks waiting to be executed.
+
+14. Which Library is used to create ThreadPool? Which Interface provide main functions of thread-pool?
+Java.util.concurrent
+ExecutorService
+
+15. How to submit a task to ThreadPool?
+submit()
+
+16. What is the advantage of ThreadPool?
+First we can reuse threads so better performance and minimal overhead. It simplify the thread management
+process so less manual work compared to traditional thread management. It helps manage tasks efficiently
+as FIFO order.
+
+17. Difference between shutdown() and shutdownNow() methods of executor
+Shutdown means don't accept new tasks but will not stop the running tasks. But shutdownNow() will stop
+the running tasks.
+
+18. What is Atomic classes? How many types of Atomic classes? Give me some code example of Atomic
+classes and its main methods. when to use it?
+Atomic classes make thread safe without using a lock. We have AtomicInteger, AtomicLong, AtomicBoolean.
+addAndGet(), incrementAndGet(), getAndSet(), getAndIncrement(). It is good for simple counters.
+
+19. What kind of locks do you know? What is the advantage of each lock?
+Intrinsic lock: object lock/class lock with synchronized keyword, easy to implement, good for simple tasks.
+Explicit lock: ReentrantLock, lock.lock(): obtain locks, lock.unlock(): release locks, and we need to
+consider about exception. ReadWriteLock, we cannot write while read. StampedLock: we can write while read
+but need to handle thread safety issue.
+
+20. What is future and completableFuture? List some main methods of CompletableFuture.
+Future is for simple asynchronous computations and completableFuture provides more flexibility and control.
+supplyAsync(), thenApply(), thenAccept(), thenRun(), join()
+
+
+
