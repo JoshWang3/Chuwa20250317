@@ -1,0 +1,13 @@
+CRUD: create, read, update, delete
+
+SQL:
+INSERT INTO users (id, name, email) VALUES (1, 'Alice', 'alice@example.com');
+SELECT * FROM users WHERE id = 1;
+UPDATE users SET email = 'newalice@example.com' WHERE id = 1;
+DELETE FROM users WHERE id = 1;
+
+MongoDB:
+db.users.insertOne({ _id: 1, name: "Alice", email: "alice@example.com" });
+db.users.findOne({ _id: 1 });
+db.users.updateOne({ _id: 1 }, { $set: { email: "newalice@example.com" } });
+db.users.deleteOne({ _id: 1 });
