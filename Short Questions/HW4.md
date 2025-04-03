@@ -1,3 +1,52 @@
+# CRUD MySQL and MongoDB
+## MySQL
+### Create
+```sql
+INSERT INTO users (name, age) VALUES ('Alice', 25);
+```
+### Read
+```sql
+SELECT * FROM users;
+SELECT * FROM users WHERE name = 'Alice';
+```
+
+### Update
+```sql
+UPDATE users SET age = 26 WHERE name = 'Alice';
+```
+### Delete
+```sql
+DELETE FROM users WHERE name = 'Alice';
+```
+
+## MongoDB
+```json
+{ "_id": ObjectId("..."), "name": "Alice", "age": 25 }
+```
+### Create
+```js
+db.users.insertOne({ name: "Alice", age: 25 });
+```
+
+### Read
+```js
+db.users.find(); // All users
+db.users.find({ name: "Alice" }); // Filtered
+```
+
+### Update
+```js
+db.users.updateOne(
+  { name: "Alice" },
+  { $set: { age: 26 } }
+);
+```
+
+### Delete
+```js
+db.users.deleteOne({ name: "Alice" });
+```
+
 # 5 GET APIs with different response type
 ## JSON Response
 ```bash
