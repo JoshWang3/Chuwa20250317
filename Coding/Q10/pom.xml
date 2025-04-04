@@ -8,7 +8,7 @@
         <version>3.4.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>hw_five.ten</groupId>
+    <groupId>hw5_q10</groupId>
     <artifactId>mongo-blog</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>mongo-blog</name>

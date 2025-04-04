@@ -1,7 +1,7 @@
-package hw_five.ten.mongoblog.controller;
+package hw5_q10.mongoblog.controller;
 
-import hw_five.ten.mongoblog.model.Post;
-import hw_five.ten.mongoblog.service.PostService;
+import hw5_q10.mongoblog.model.Post;
+import hw5_q10.mongoblog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

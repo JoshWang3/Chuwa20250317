@@ -1,4 +1,4 @@
-package hw_five.ten.mongoblog;
+package hw5_q10.mongoblog;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

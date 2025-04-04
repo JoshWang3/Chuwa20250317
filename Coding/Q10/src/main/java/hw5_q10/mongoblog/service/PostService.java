@@ -1,7 +1,7 @@
-package hw_five.ten.mongoblog.service;
+package hw5_q10.mongoblog.service;
 
-import hw_five.ten.mongoblog.model.Post;
-import hw_five.ten.mongoblog.repository.PostRepository;
+import hw5_q10.mongoblog.model.Post;
+import hw5_q10.mongoblog.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
