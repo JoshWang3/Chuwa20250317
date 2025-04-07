@@ -1,0 +1,41 @@
+2. Explain the @Column annotation
+a. It defines the column type as varchar(225), default value is John Snow
+b. It defines the column name is STUDENT_NAME, max length is 50, can be null, don't have to be unique
+
+3. Default @Column name
+The same as filed name. So a. firstName, b. operatingSystem
+
+4. Layers of spring boot
+Controller: how the application respond to a api. It gets http requests and return responses
+Service: defines the business logics
+Entity: map to specific database
+Repository: defines how to interact with database
+DTO: transfer data between layers
+
+5. Describe the flow in all of the layers if an api is called
+The client side send a http request, the controller gets the request, for example if I want to get an user
+by id. The request first arrive at the controller, then controller pass it to the service layer, then the
+service layer interact with repository to find the user. After finding it, database send the response to
+service and then to controller and finally back to the client.
+
+6. application.properties, application.yml
+It is the configuration file for a spring boot app. I can define properties like server settings, database
+connections, logging, security. application.yaml provides more readable structure than application.properties
+
+7. Naming differences between GraphQL and rest API? why is the difference?
+Graphql has a single endpoint while rest has multiple endpoints. Graphql uses query types for methods, query,
+mutation, subscription. Rest uses http methods, get, post, delete. Graphql is more flexible than rest, it can
+fetch related data in a single query. They are for different purpose, rest is to get predefined structure of
+data and graphql is for more flexible requests.
+
+8. How graphql solve N+1 problems in rest.
+If we want to fetch a list of items from api, we need to send multiple requests. But we can do it in a single
+query with graphql. For example, we can get all posts and also authors id. We can get all users and their followers id.
+
+
+
+
+
+
+
+
