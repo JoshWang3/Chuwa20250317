@@ -155,3 +155,47 @@ public class UserController {
     }
 }
 ```
+## Annotations used by Repository
+### `@Entity`  
+Marks a class as a JPA entity (a table in the database).
+```java
+@Entity
+public class User {
+    @Id
+    private Long id;
+}
+```
+### `@Table`
+Specifies the name of the table in the database.
+```java
+@Entity
+@Table(name = "users")
+public class User {
+    @Id
+    private Long id;
+}
+```
+### `@Id`  
+Specifies the primary key of an entity.
+```java
+@Id
+private Long id;
+```
+### `@Column`  
+Maps a field to a specific column in the table.
+```java
+@Column(name = "name", nullable = false)
+private String name;
+```
+### `@CreationTimestamp`  
+Automatically sets the timestamp when the entity is first persisted (inserted into the database).
+```java
+@CreationTimestamp
+private LocalDateTime createdDateTime;
+```
+### `@UpdateTimestamp`  
+Automatically updates the timestamp whenever the entity is updated (any change is saved to the DB).
+```java
+@UpdateTimestamp
+private LocalDateTime updatedDateTime;
+```
