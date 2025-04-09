@@ -1,0 +1,69 @@
+1. List all of the Spring data related annotations your learned and explain its usage.
+See annotation.md.
+
+2. What is DTO, VO, Payload, PO, model, DAO?
+DTO: It encapsulates data, so improving security.  it transfers data between different layers.
+VO: Value object, it is determined by its value, example: address.
+Payload: Data that sent in a request or response body. Like JSON data.
+PO: Persistent object. Entity, maps to a table of database.
+Model: in spring boot, it often refers to an entity
+DAO: data access object. Repository, interacts with database.
+
+3. What is @JsonProperty("description_yyds")
+It is commonly used for a filed of a class that this field will shown with a different name other than the field
+name in the JSON body.
+
+4. Jackson library
+It imports the jackson dependency. It converts json data to java object and vice versa, serialization and
+deserialization. We don't have to explicitly add this dependency since spring boot includes it automatically.
+
+5. Spring boot starter
+Spring boot starter web, spring boot starter data jpa, spring boot starter test
+
+6. Explain @RequestMapping(value = "/users", method = RequestMethod.POST) ? could you list CRUD by
+this style?
+@RequestMapping(value = "/users", method = RequestMethod.GET) = @GetMapping("/users")
+@RequestMapping(value = "/users", method = RequestMethod.DELETE) = @DeleteMapping("/users")
+@RequestMapping(value = "/users", method = RequestMethod.PUT) = @PutMapping("/users")
+
+7. Response Entity
+A spring class that represents the full http response. It gives me the full control of the data that sends to the
+client side.
+
+8. What is ResultSet in jdbc? and describe the flow how to get data using JDBC
+ResultSet is a java object that holds the returned data from a database query. Load the jdbc driver->
+create a connection -> create a statement -> execute the query -> process the ResultSet -> close resources
+
+9. Compare Spring Data JPA vs Hibernate vs JDBC.
+They are all ways interact with database.
+JDBC, the most basic, I have to handle everything manually, I need to write sql.
+Hibernate, it converts java objects and database tables automatically, using hibernate query languages
+JPA, built-methods that we can directly use, minimal code, so we can focus on business logics
+
+10. ObjectMapper
+It is a java class of jackson library, converting json data to java objects and vice versa.
+Example:
+//redValue(), It converts json to a java object
+FoodOutlet foodOutlet = objectMapper.readValue(resBody, FoodOutlet.class);
+//writeValueAsString, it converts a java object to json string
+String s = objectMapper.writeValueAsString(foodOutlet);
+//readTree() deserialize json string. It is useful when we don't have a predefined class for json
+JsonNode rootNode = objectMapper.readTree()
+String name = rootNode.path("name").asText();
+
+11. What is the serialization and deserialization?
+Serialization: converts java objects into other data types, like json, xml
+Deserialization: converts json, xml into java objects
+
+
+
+
+
+
+
+
+
+
+
+
+

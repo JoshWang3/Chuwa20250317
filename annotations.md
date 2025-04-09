@@ -37,10 +37,24 @@ It marks a class as service class. This class contains business logic.
 @RequestBody
 It accepts client side JSON, and it converts JSON to java objects.
 
+@Repository
+It marks data access object(DAO). It interacts with database.
+
+@Entity
+It maps a java class to a table of database. 
+
+@Table
+What specific table the class map to. 
+Example: @Table(name = "posts");
+
 @Column
 It maps a java class field to a column of a database table.
 Example:
-    @Column(name = "username", nullable = false)
-    private String username;
+@Column(name = "username", nullable = false)
+private String username;
+
+@Id
+It defines the primary key of the current table.
+
 
 
