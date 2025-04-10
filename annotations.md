@@ -56,5 +56,10 @@ private String username;
 @Id
 It defines the primary key of the current table.
 
+@EnableTransactionManagement
+along with @Transactional to detect transactional methods
+@Transactional
+mark the transactional method. without it, database won't roll back
+
 
 
