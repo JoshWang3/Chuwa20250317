@@ -1,0 +1,34 @@
+1. find the customer's payments, like credit card 1, credit card 2, paypal, Apple Pay.
+GET /users/{id}/payments
+
+2. Find the customer's history orders from 10/10/2022 to 10/24/2022
+GET /users/{id}/orders?start-date=2022-10-10&end-date=2022-10-24
+
+3. find the customer's delivery addresses
+GET /users/{id}/addresses
+
+4. If I also want to get customer's default payment and default delivery address, what kind of the API (URL)
+should be?
+GET /users/{id}/payments/default
+GET /users/{id}/address/default
+
+5. Find 2 collection of APIs example. ie. Twitter, Paypal, Youtube etc. -- 命名规范
+
+6. Design a collection of APIs for a Blog Website, please specify GET POST PUT DELETE
+GET /users
+    /users/{userId}
+    /posts
+    /posts/{postId}
+
+Post /posts
+     /posts/{postId}/comments
+
+Put /posts/{postId}
+
+Delete /posts/{postId}
+
+We should use path variables when specifying a sub resource, like userId, and we should always use plurals
+for collections.
+
+
+

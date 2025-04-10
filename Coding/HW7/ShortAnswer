@@ -1,0 +1,66 @@
+4. JPA VS Hibernate:
+JPA is a standard for ORM, object relational mapping, it maps java objects to database tables and perform
+database operations without writing queries.
+Hibernate is an implementation of JPA, but it extends JPA, adding some new features that are helpful. Besides
+Hibernate, there are other implementations of JPA
+
+5. Hiraki Pool and benefits?
+Hiraki pool is a connection pool. Since connect a disconnect with a database is expensive, Hiraki maintain
+several open connections so low latency and high performance
+
+6. @OneToMany, @ManyToOne, @ManyToMany
+Posts - comments : one To many
+comments - posts: many to one
+students - courses: many to many
+
+7. Cascade
+Cascade = CascadeType.All: it defines how database change when the related database change. All means all
+CRUD operations will make changes to the child database
+OrphanRemoval = true: remove the child entity if it no longer belong to the parent, like a review belongs
+to a product, if the review is removed from the collection, we delete it from the database
+
+8. fetch = FetchType.LAZY, fetch = FetchType.EAGER
+It defines how the jpa load related entities. Lazy is until we actually access the entry in our code, them
+it loads, eager is we load all related entries beforehand. If we need data immediately and the data is small
+we can use eager, or we may want lazy to improve the performance.
+
+9. JPA naming conventions?
+We don't need to write our owm queries to interact with database, the jpa will generate queries according to
+the methods names. There are some built-in methods but we can also create our own. For example,
+findByFirstnameAndLastname, findByFirstnameOrLastname, findByAgeIn
+
+13. JPQL?
+A query language to query java objects.
+
+14. @NamedQuery and @NamedQueries
+Single jpql VS several jpqls
+
+15. @Query
+Different from @NamedQuery, @NamedQuery is defined in entity class level, but the @Query is defined in repository
+interface method level. Both of them are queries for java objects.
+
+17. EntityManager
+A core interface in JPA to Manage CRUD for entities. In spring boot we usually don't explicitly use it,
+spring data jpa handles it for us.
+
+18. Session factory and session?
+They are concepts of Hibernate. Hibernate has a session factory to create sessions to interact with database.
+Session factory is created once per application. It uses Hikari pool to get jdbc connections.
+Session factory manages the lifecycle of session, when we want to process the data, a new session is created,
+and the session shut down when everything complete. Session factory is thread safe while session is not.
+
+19. Transaction
+A series of operations for database, if any operation fail, the database will roll back. Only when everything
+be done successfully, the database will be updated. We can mark a method as @Transactional to make a transaction
+method. Transactional works with @EnableTransactionManager, but we don't have to manually add this annotation
+in spring boot app.
+
+20. Hibernate caching
+We have first level cache and second level cache. The first level cache exists in a single session and it is
+default. When we want to fetch data, hibernate would check first level cache. When the session close the cache
+no longer exists. Second level cache is not default, we need to configure it manually in the application. properties.
+The cache is share across sessions. The cache exists long time.
+
+
+
+
