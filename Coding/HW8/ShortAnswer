@@ -1,0 +1,80 @@
+2. Compare Spring and Spring boot? Benefits of spring boot?
+Spring is the core framework, spring boot is a toolkit built on top of it.
+Spring needs to manually add configuration, set up server, add dependencies. While spring boot is less manual
+work, because this framework does the boilerplate for us. The benefits of spring boot, first, it is beginner
+friendly because of the auto configuration. It has embedded server like Tomcat. There are many annotations we
+can directly use instead of manual configuration.
+
+3. What is IOC and what is DI?
+IOC is inversion of control. Instead of manually creating java objects, we give the control to spring boot, so
+it helps us manage beans. DI is dependency injection. It provides dependency from outside, but not creating them
+inside the object.
+
+4. What's @ComponentScan?
+It tells the spring to auto scan our beans and manage the bean lifecycle for us.
+
+5. What is @SpringBootApplication
+It is made from 3 annotations, @Configuration, @EnableAutoConfiguration, @ComponentScan. We put this annotation
+on top of the app class. It manage all beans inside the folder.
+
+6. How many ways to define a bean?
+a. Constructor, the most useful and efficient one. It protect the bean that can't be overwritten and good for test.
+@Autowired
+public Constructor(Service service) {
+    this.service = service;
+}
+b. Setter, if the dependency is optional
+@Autowired
+public void set(Service service) {
+    this.service = service;
+}
+c. field, the least use, hard to test, not good for security
+@Autowired
+private Service service
+
+7. What's the default bean name of @Component and @Bean? Compare @Component and @Bean?
+@Component default name is the lowercase version of class name.
+@Bean default name is the name of method
+@Bean is for method level, when we want to use code developed by third party since we can't directly use their
+class. We can use @Autowired to do dependency injection so We have full control over the method.
+@Component is for class level, for classes that created by our own. Spring boot auto scans it as a bean.
+
+8. Compare @Component, @Service, @Repository, @Controller
+@Controller, where we define the api, how we get requests and return responses.
+@Service, defines business logics
+@Repository, interact with database and process the data
+@Component, mark a class as a bean, let spring boot auto manage the bean for us
+
+9. @Autowired, @Qualifier, @Resource, @Primary
+@Autowired defines where we want to do dependency injection
+@Qualifier, clarify which bean we want to inject
+Example: @Qualifier("beanName")
+@Resource: Another way to do injection, put it on top of method name, @Resource(name="beanName")
+@Primary: Mark the bean as primary, when multiple beans handle same tasks, spring boot use the primary first
+Qualifier > primary
+
+10. Annotations to inject a bean?
+@Autowired, @Resource
+
+12. How to set bean primary?
+@Service
+@Primary
+public class MyService {
+
+}
+Qualifier > primary > fieldName
+
+13. BeanFactory and ApplicationContext
+They are both IOC containers to manage beans.
+ApplicationContext is the default one, it have full features we can use.
+BeanFactory is only for lightweight apps.
+
+14. Bean scope?
+Singleton. It is the bean default scope which means we just have one object, no matter where we inject the bean,
+we only ues this single one object.
+Prototype: Every time we inject the bean, a new object is created
+Scope("prototype")
+
+
+
+
