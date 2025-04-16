@@ -199,3 +199,71 @@ Automatically updates the timestamp whenever the entity is updated (any change i
 @UpdateTimestamp
 private LocalDateTime updatedDateTime;
 ```
+## Annotations used for exception handling
+### `@ControllerAdvice`
+Used for global exception handling, binding, and model attribute configuration across all @Controller classes.
+### `@ExceptionHandler`
+Used inside `@ControllerAdvice` or any `@Controller` to handle specific exceptions thrown during the execution of controller methods. It allows you to catch exceptions and return a customized response to the client instead of a generic error.
+```java
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("code", 404);
+        body.put("message", ex.getMessage());
+        body.put("data", null);
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleAllExceptions(Exception ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("code", 500);
+        body.put("message", "Internal server error: " + ex.getMessage());
+        body.put("data", null);
+
+        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+```
+### `@ResponseStatus`
+Mark a class or method with a specific **HTTP status code** that should be returned to the client when an exception is thrown or a response is returned.
+```java
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+}
+```
+## Annotations used for application configuration
+### `@SpringBootApplication`
+Combines three important annotations (`@Configuration`, `@EnableAutoConfiguration`, `@ComponentScan`) to quickly configure and bootstrap a Spring Boot application.
+### `@Configuration`
+Marks the class as a source of Spring bean definitions.
+### `@EnableAutoConfiguration`
+Automatically configures your app based on dependencies in your classpath.
+### `@ComponentScan`
+Automatically scans the package and sub-packages for Spring components
+```java
+@SpringBootApplication
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+```
+### `@Bean`
+Explicitly declare a bean inside a method. Must put inside a class annotated with `@Configuration`.
+```java
+@Configuration
+public class MyConfig {
+    @Bean
+    public MyService myService() {
+        return new MyService();
+    }
+}
+```
