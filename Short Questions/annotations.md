@@ -267,3 +267,120 @@ public class MyConfig {
     }
 }
 ```
+## Annotations used for security
+### `@PreAuthorize`
+Used to authorize access to a method before it is executed.
+```java
+@PreAuthorize("hasRole('ADMIN')")
+public void deleteUser(Long id) {
+    // only ADMIN can access
+}
+```
+## Annotations used for AOP
+### `@Aspect`
+Indicate that a class contains cross-cutting concerns.
+```java
+@Aspect
+@Component
+public class LoggingAspect {
+
+    @Before("execution(* com.example.service.*.*(..))")
+    public void logBeforeMethod() {
+        System.out.println("Method is about to be called...");
+    }
+}
+```
+### `@PointCut`
+Define a reusable expression that specifies join points.
+```java
+@Pointcut("execution(* com.example.service.*.*(..))")
+public void allServiceMethods() {}
+```
+### `@Before`
+Marks a method to run before a matched target method (join point) is executed.
+```java
+@Aspect
+@Component
+public class LoggingAspect {
+
+    @Before("execution(* com.example.service.UserService.*(..))")
+    public void logBeforeServiceMethod(JoinPoint joinPoint) {
+        System.out.println("Calling method: " + joinPoint.getSignature().getName());
+    }
+}
+```
+### `@After`
+Marks a method to run after a matched target method (join point) is executed.
+```java
+@Aspect
+@Component
+public class AuditAspect {
+
+    @After("execution(* com.example.service.UserService.*(..))")
+    public void afterAnyUserServiceMethod(JoinPoint joinPoint) {
+        System.out.println("Finished method: " + joinPoint.getSignature().getName());
+    }
+}
+```
+### `@AfterReturning`
+Marks a method to run after a matched target method (join point) completes successfully.
+```java
+@Aspect
+@Component
+public class LoggingAspect {
+
+    @AfterReturning(
+        pointcut = "execution(* com.example.service.UserService.getUserById(..))",
+        returning = "user"
+    )
+    public void logAfterReturning(JoinPoint joinPoint, Object user) {
+        System.out.println("Method returned successfully: " + joinPoint.getSignature().getName());
+        System.out.println("Returned value: " + user);
+    }
+}
+```
+### `@AfterThrowing`
+Marks a method to run only when a method throws an exception.
+```java
+@Aspect
+@Component
+public class ExceptionLogger {
+
+    @AfterThrowing(
+        pointcut = "execution(* com.example.service.UserService.*(..))",
+        throwing = "ex"
+    )
+    public void logException(JoinPoint joinPoint, Throwable ex) {
+        System.out.println("Exception in method: " + joinPoint.getSignature().getName());
+        System.out.println("Exception: " + ex.getMessage());
+    }
+}
+```
+### `@Around`
+Allows you to intercept the method execution, run code before and after, and even modify the return value or handle exceptions.
+```java
+@Aspect
+@Component
+public class TimingAspect {
+
+    @Around("execution(* com.example.service.*.*(..))")
+    public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+        long start = System.currentTimeMillis();
+
+        System.out.println("Before: " + joinPoint.getSignature().getName());
+
+        Object result;
+        try {
+            result = joinPoint.proceed(); // proceed with the original method
+        } catch (Throwable ex) {
+            System.out.println("Exception: " + ex.getMessage());
+            throw ex; // rethrow if needed
+        }
+
+        long duration = System.currentTimeMillis() - start;
+        System.out.println("After: " + joinPoint.getSignature().getName() + " took " + duration + "ms");
+
+        return result;
+    }
+}
+```
