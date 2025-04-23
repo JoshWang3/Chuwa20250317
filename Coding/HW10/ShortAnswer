@@ -1,0 +1,87 @@
+2. Explain TLS, PKI, certificate, public key, private key and signature.
+TLS: a protocol for secure communication between client and server. When we hit a new website, tls establishes
+several handshakes to verify the server's identity. First client side say hello, sending info like encryption
+algorithms and tls version it supports. Then server side say hello, sending certificate to browser. After validating
+this server's identify, key exchange happens. Such secret key will be used in subsequent communication to secure
+data. Now client and server can communicate in a safe environment.
+PKI: public key infrastructure. It includes, public key, private key, certificate authority, certificate, it is
+sent from server to browser so the browser can validate its identity.
+certificate: for identification, includes public key, issuer info, server info, expiration date.
+public key: used in asymmetric encryption, to encrypt data.
+private key: used in asymmetric encryption, to decrypt data.
+signature: digital signature to prove the info is not changed
+
+3. I can get response without importing my certificate into local, I think it is because mac trust local signed
+certificate. But if it was a self signed certificate other than mine, it doesn't work because it is not signed
+by a trust certificate authority.
+How to create a certificate locally: use keystore to create a new one and store it. Than configure it in my
+.properties. Finally import it into local key chain. But if I want to create a certificate trusted by others,
+I can apply for a certificate from a trusted certificate authority.
+
+4. Authentication and authorization failure status code.
+401: unauthorized: not log in or invalid token
+403: forbidden: not authorized to do something
+
+5. Authentication and authorization? Spring security components for authentication and authorization
+Authentication: who is the user. In spring security, we have UserDetails, UserDetailsService, AuthenticationManager,
+PasswordEncoder, Authentication
+Authorization: whether the user is allowed to do something. In spring security, GrantedAuthority, AccessDecisionManager,
+SecurityFilterChain
+
+6. Http session?
+Session is stored in server. If initial interaction, server create a new session and return the sessionId into browser,
+or return the existed sessionId back to browser. For all subsequent requests, browser send the sessionId back as
+request header to server so server can retrieve the data for this specific user.
+
+7. Cookie?
+Cookie is stored in browser. It is created by server,It is a piece of data, containing sessionId, user preference
+and everytime interaction, browser send the cookie along with requests to server.
+
+8. Compare session and cookie
+refer to 6&7
+
+9. SSO process？
+Single sign on, meaning use sign on once can visit multiple apps. When user choose to log in through google, than
+we redirect the use to google, the identity provider provides users' info and send a token back to the app. The app
+will check the validation of the token to make sure then token is not changed.
+
+10. How to use session and cookie to keep use info?
+When initial interaction, the server creates cookie and session，and send them back to the browser. The browser store
+the cookie, for every subsequent requests, it sends the cookie along with sessionId to server, so server can
+retrieve data for the user.
+Why need cookie: a piece of data, it a place to store data, without it, where we put session?
+
+11. Spring security filter?
+We have SecurityFilterChain to make authentication and authorization. WIth the chain, we verify the user and their
+behaviors step by step to protect apps. Usually, we authenticate a user to see whether you are logged in, and from
+sessionId or token to see whether you are a valid user, if you send a request, we will check whether you have the
+authority to do it. Spring boot security auto config these filters for us, so I just need to add the following
+methods.
+Example: .formLogin(), .csrf(), .logout().
+
+12. Bearer token and jwt?
+Bearer token is a String containing user information, server parse the token to validate the user and check whether
+the user is authorized to do something.
+JWT is a type of bearer token. It allows user to visit various apps with single sign in. Server use the share secret
+key to parse JWT to check whether jwt is not changed.
+
+13. How to store sensitive data in database?
+We don't store plain text of password in database, instead, we append a salt to the password and then hash the
+code, such hashcode can't be hashed back. Salt is to make even two people have same password still get different
+hashcode. When user enter password, we hash the input and compare the hashcode with what we have in database.
+If match, we can validate the user.
+
+15. Disadvantage of session?
+Session is stored in the server, so I can only interact with the specific server. If in a distributed system, and
+that server is out of work, I lose my state. So in modern development, token becomes very popular, such token
+is stored in browser and any server that share the secret key can parse to token and than to verify the user.
+
+16. How to get value from .properties in spring security?
+@Value, @ConfigurationProperties
+
+19. Best practice to securely store secrets.
+Never hardcode secrets, use environment variables instead.
+Encrypt/hash sensitive data, don't use plain text.
+Restrict access, only authorized user can get access to sensitive data.
+
+
