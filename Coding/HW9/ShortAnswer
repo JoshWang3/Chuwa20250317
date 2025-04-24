@@ -1,0 +1,33 @@
+2. Tight coupling and loose coupling and what IOC does?
+Tight coupling: two classes highly dependent with each other, for example, we create an instance of
+a class inside another class, so the instance is tightly coupling with this class
+Loose coupling: minimal dependency, more flexible, which is a good practice
+IOC uses loose coupling, instead creating objects manually, spring boot IOC container manage beans for us, so
+dependencies are loose coupling, which is more flexible for scaling and introducing new features
+
+3. What is MVC pattern?
+M: model, container of data
+View: front-end view
+Controller: handle requests
+The center of MVC is dispatcherServlet. Front-controller map front-end requests to controller, return result to
+dispatcherServlet, then dispatcherServlet call controller to handle requests. The controller will call services,
+repositories, database and return view and model. dispatcherServlet call view solver and insert the data into
+new. Finally, dispatcherServlet return html back to browser.
+
+4. Front-end controller
+Maps requests to controller, find the specific controller that handles such request
+
+5. dispatcherServlet
+refer to 3
+
+6. JSP and Model and View?
+JSP is a server-side view technology, we can embed java code into jsp to create dynamic web pages
+Model: Container of data
+View: UI
+
+7. Servlet and Servlet container?
+Servlet is a java class to handle http requests and responses.
+Servlet container manages and run servlet, like Tomcat, Jetty, GlassFish, WildFly.
+
+
+
