@@ -1,0 +1,33 @@
+1. Unit test
+Unit test is test for individual method or component. It's a white box test, usually done by developer.
+Common tools are Junit, Mockito.
+
+2. Functional test
+Test specific features or business logics
+
+3. Integration test
+Test for multiple components. The scope can be small to an api to large from front-end to back-end.
+Common tool is TestNG.
+
+4. Regression test
+Make sure new changes don't break tests.
+
+5. Smoke test
+Test core functions.
+
+6. Performance test
+Load test, how app works in high traffic.
+
+7. Stress test
+How system behave under extreme load. It goal is to see the extreme point and how system recover.
+
+8. AB test
+We have a control group and a variant group, show different features to people, to test whether the new feature
+is better
+
+9. End to end test
+Test the entire workflow, from front-end to back-end to database, also include any external systems, simulate
+how user use the app.
+
+10. User acceptance test
+Final stage of test, real users test the app too see if it meets business requirements.
