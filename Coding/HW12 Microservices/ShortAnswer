@@ -1,0 +1,40 @@
+2. Explain monolithic architecture, service oriented architecture and Micro service architecture.
+Monolithic architecture: one code base, all components are packaged as one unit. tightly coupling.
+Service oriented architecture: each service performs a specific business functions
+Micro service: each service has a single responsibility, services are loosely coupling, services communicate
+with each other through api or messaging tools
+
+3. Document the microservice architecture and core components
+Docker: container to package services, so services are isolated
+Service registry: detect service, so it can be found by other services
+Api gateway: all requests come to api gateway, and assign it to corresponding services to handle it
+Load balancer: assign requests to available server evenly, avoiding hotspot
+Circuit breaker: if a service down, won't affect other services, have a back up plan to bypass the failure service
+Kafka: for messaging, handle communication between services
+
+4. Explain Resilience patterns? Explain circuit breaker with Spring Cloud Hystrix code example.
+If a service goes down, that request returns an exception or time out, then the connection cut off to prevent
+cascading failure. In the mean time provides a back up plan. If a call fail, retry after some time.
+
+5. Explain load balancing algorithms.
+a. round robin: connect one by one, like a circle
+b. weighted round robin: higher weight gets more request
+c. least connection
+d. IP hash: hash ip address
+e. random
+
+6. Explain API Gateway.
+Api gateway is mainly for routing, all requests go to api gateway and it assigns requests to corresponding services
+to handle them. It can also serve other functions, like security for authentication and authorization, load balancer
+
+7. Explain service discovery and service registry
+Service discovery: a service finds ip of other services
+Service registry: like Eureka, a database of service instances. A service will first register itself, registry
+periodically check the if the service is healthy
+
+8. List Spring Cloud Modules that serve as Microservice components (e.g. Euerka for Service Discovery)
+Service registry: Eureka
+Api gateway: spring cloud gateway
+Load balancer: spring cloud balancer:
+Circuit breaker: Resilience4j
+
