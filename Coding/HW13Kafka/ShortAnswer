@@ -1,0 +1,65 @@
+Kafka concepts:
+a. Topic: a specific stream of data, like a table of database
+b. Partition: a topic has several partitions located in different brokers, message inside partition is consecutive
+c. Broker: server, each partition has a leader broker, and the other brokers are followers
+d. Consumer group: a collection of consumers to read data from partition
+e. Producer: Producer sends events/messages(header, key, payload)
+f. Offset: a unique index for message, so we know what message is consumed
+g. Zookeeper: manage brokers
+
+1. Given N (number of partitions) and M (number of consumers,) what will happen when N>=M and N<M
+   respectively?
+if N >= M, a consumer may be responsible for more than 1 partition. Otherwise, some consumer may be idle. Because
+a partition can only be consumed by one consumer.
+
+2. Explain how brokers work with topics?
+Topics contains several partitions that located in different broker. A partition has a leader broker which reads
+and writes. Other brokers are followers, replicas. If the leader broker is down, one of the other followers will
+become the new leader.
+
+3. Are messages pushed to consumers or consumers pull messages from topics?
+Consumer read messages from topics
+
+4. How to avoid duplicate consumption of messages?
+First, messages are consecutive inside a partition. And we have Offset. Each message has a unique id, offset.
+When consumer commits a message, the offset is recorded.
+
+5. What will happen if some consumers are down in a consumer group? Will data loss occur? Why?
+If some consumers are down, other consumers will take over the partition. The data won't loss because we have
+offset record, so we know which one is consumers and where we should start from the next one.
+
+6. What will happen if an entire consumer group is down? Will data loss occur? Why?
+If the entire consumer group is down, the data is still stored in partition. No data loss, because we have retain
+time for data.
+
+7. Explain consumer lag and how to resolve it?
+Consumer lag is that consumer doesn't process data timely, so some data remain in partition waiting to be processed.
+We can add more partition and more consumer to scale it up.
+
+8. Explain how Kafka tracks message delivery?
+Using offsets. Offsets are stored in a special internal topic: consumer_offsets. It records which offset is consumed.
+
+9. Compare Kafka vs RabbitMQ, compare messaging frameworks vs MySql (Why Kafka)?
+Kafka: For event-driven architecture, big data pipelines, or analytics.
+RabbitMQ: For work queues, short tasks, and request-response systems.
+Messaging Framework: If your system needs real-time data movement, event processing, or service decoupling.
+MySQL: If you need structured data storage, transactions, and complex querying.
+
+10. Kafka message delivery configuration
+
+spring.kafka.producer.acks=0
+spring.kafka.producer.retries=0
+spring.kafka.producer.enable-idempotence=false
+
+spring.kafka.producer.acks=1
+spring.kafka.producer.retries=3
+spring.kafka.producer.enable-idempotence=false
+
+spring.kafka.producer.acks=all
+spring.kafka.producer.retries=5
+spring.kafka.producer.enable-idempotence=true
+spring.kafka.producer.transaction-id-prefix=my-tx-
+spring.kafka.consumer.isolation-level=read_committed
+spring.kafka.listener.ack-mode=record
+
+
