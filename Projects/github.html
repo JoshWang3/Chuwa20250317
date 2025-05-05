@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>GitHub Repo Fetcher</title>
+</head>
+<body>
+
+  <h2>GitHub Repositories Lookup</h2>
+  <input type="text" id="username" placeholder="Enter GitHub username" />
+  <button onclick="fetchRepose()">Get User</button>
+  <pre id="output"></pre>
+
+  <script>
+    const output = document.getElementById("output");
+
+    function fetchRepose() {
+      const user = document.getElementById("username").value.trim();
+      if (!user) return output.textContent = "Please enter a GitHub username.";
+
+      fetch(`https://api.github.com/users/${user}/repos`)
+        .then(res => {
+          if (!res.ok) throw new Error("User not found or API error.");
+          return res.json();
+        })
+        .then(data => {
+          output.textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+          output.textContent = `🚫 Error: ${err.message}`;
+        });
+    }
+  </script>
+
+</body>
+</html>
