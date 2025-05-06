@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Repository Fetcher</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #24292e;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .container {
+            background-color: white;
+            border-radius: 6px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+        }
+        .input-group button {
+            padding: 10px 20px;
+            background-color: #2ea44f;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .input-group button:hover {
+            background-color: #2c974b;
+        }
+        .method-selector {
+            margin-bottom: 20px;
+        }
+        .method-selector label {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .method-selector input {
+            margin-right: 5px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .user-info img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+        .user-info .details h2 {
+            margin: 0 0 10px 0;
+        }
+        .user-info .details p {
+            margin: 0;
+            color: #586069;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        #json-result {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            padding: 15px;
+            overflow: auto;
+            max-height: 500px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        .error {
+            padding: 15px;
+            background-color: #ffebee;
+            color: #d32f2f;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        .repo-count {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .loading {
+            text-align: center;
+            margin: 20px 0;
+            color: #586069;
+        }
+        .loading img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>GitHub Repository Fetcher</h1>
+
+    <div class="method-selector">
+        <label><input type="radio" name="fetch-method" value="promise" checked> Promise (.then/.catch)</label>
+        <label><input type="radio" name="fetch-method" value="async-await"> Async/Await</label>
+        <label><input type="radio" name="fetch-method" value="xhr"> XMLHttpRequest</label>
+    </div>
+
+    <div class="input-group">
+        <input type="text" id="user-id" placeholder="Enter GitHub Username" autofocus>
+        <button id="fetch-btn">Fetch Repositories</button>
+    </div>
+
+    <div id="loading" class="loading" style="display: none;">
+        <span>Loading repositories...</span>
+    </div>
+
+    <div id="user-display" style="display: none;"></div>
+
+    <div id="error-message" class="error" style="display: none;"></div>
+
+    <div class="result" id="result-container" style="display: none;">
+        <div class="repo-count" id="repo-count"></div>
+        <pre id="json-result"></pre>
+    </div>
+</div>
+
+<script>
+    const userIdInput = document.getElementById('user-id');
+    const fetchBtn = document.getElementById('fetch-btn');
+    const jsonResult = document.getElementById('json-result');
+    const errorMessage = document.getElementById('error-message');
+    const resultContainer = document.getElementById('result-container');
+    const loading = document.getElementById('loading');
+    const repoCount = document.getElementById('repo-count');
+    const userDisplay = document.getElementById('user-display');
+
+    // Handle Enter key press
+    userIdInput.addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            fetchBtn.click();
+        }
+    });
+
+    fetchBtn.addEventListener('click', function() {
+        const userId = userIdInput.value.trim();
+        if (!userId) {
+            showError('Please enter a GitHub username');
+            return;
+        }
+
+        // Get selected method
+        const method = document.querySelector('input[name="fetch-method"]:checked').value;
+
+        // Reset display
+        errorMessage.style.display = 'none';
+        resultContainer.style.display = 'none';
+        loading.style.display = 'block';
+
+        // Fetch repos using the selected method
+        switch (method) {
+            case 'promise':
+                fetchWithPromise(userId);
+                break;
+            case 'async-await':
+                fetchWithAsyncAwait(userId);
+                break;
+            case 'xhr':
+                fetchWithXHR(userId);
+                break;
+            default:
+                fetchWithPromise(userId);
+        }
+    });
+
+    // Method 1: Using Promises with .then/.catch
+    function fetchWithPromise(userId) {
+        // First fetch user info
+        fetch(`https://api.github.com/users/${userId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`GitHub API returned ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(userData => {
+                displayUserInfo(userData);
+
+                // Then fetch repositories
+                return fetch(`https://api.github.com/users/${userId}/repos`);
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`GitHub API returned ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                displayResults(data);
+            })
+            .catch(error => {
+                const errorMsg = getFriendlyErrorMessage(error, userId);
+                showError(errorMsg);
+            })
+            .finally(() => {
+                loading.style.display = 'none';
+            });
+    }
+
+    // Method 2: Using Async/Await
+    async function fetchWithAsyncAwait(userId) {
+        try {
+            // Fetch user data
+            const userResponse = await fetch(`https://api.github.com/users/${userId}`);
+
+            if (!userResponse.ok) {
+                throw new Error(`GitHub API returned ${userResponse.status}: ${userResponse.statusText}`);
+            }
+
+            const userData = await userResponse.json();
+            displayUserInfo(userData);
+
+            // Fetch repositories
+            const repoResponse = await fetch(`https://api.github.com/users/${userId}/repos`);
+
+            if (!repoResponse.ok) {
+                throw new Error(`GitHub API returned ${repoResponse.status}: ${repoResponse.statusText}`);
+            }
+
+            const data = await repoResponse.json();
+            displayResults(data);
+
+        } catch (error) {
+            const errorMsg = getFriendlyErrorMessage(error, userId);
+            showError(errorMsg);
+        } finally {
+            loading.style.display = 'none';
+        }
+    }
+
+    // Method 3: Using XMLHttpRequest (old school)
+    function fetchWithXHR(userId) {
+        // First get user info
+        const userXhr = new XMLHttpRequest();
+
+        userXhr.open('GET', `https://api.github.com/users/${userId}`, true);
+
+        userXhr.onload = function() {
+            if (userXhr.status >= 200 && userXhr.status < 300) {
+                const userData = JSON.parse(userXhr.responseText);
+                displayUserInfo(userData);
+
+                // Then get repositories
+                const repoXhr = new XMLHttpRequest();
+                repoXhr.open('GET', `https://api.github.com/users/${userId}/repos`, true);
+
+                repoXhr.onload = function() {
+                    if (repoXhr.status >= 200 && repoXhr.status < 300) {
+                        const data = JSON.parse(repoXhr.responseText);
+                        displayResults(data);
+                    } else {
+                        const error = new Error(`GitHub API returned ${repoXhr.status}`);
+                        const errorMsg = getFriendlyErrorMessage(error, userId);
+                        showError(errorMsg);
+                    }
+                    loading.style.display = 'none';
+                };
+
+                repoXhr.onerror = function() {
+                    const error = new Error('Network error occurred');
+                    const errorMsg = getFriendlyErrorMessage(error, userId);
+                    showError(errorMsg);
+                    loading.style.display = 'none';
+                };
+
+                repoXhr.send();
+
+            } else {
+                const error = new Error(`GitHub API returned ${userXhr.status}`);
+                const errorMsg = getFriendlyErrorMessage(error, userId);
+                showError(errorMsg);
+                loading.style.display = 'none';
+            }
+        };
+
+        userXhr.onerror = function() {
+            const error = new Error('Network error occurred');
+            const errorMsg = getFriendlyErrorMessage(error, userId);
+            showError(errorMsg);
+            loading.style.display = 'none';
+        };
+
+        userXhr.send();
+    }
+
+    function displayUserInfo(userData) {
+        userDisplay.innerHTML = `
+                <div class="user-info">
+                    <img src="${userData.avatar_url}" alt="${userData.login} avatar">
+                    <div class="details">
+                        <h2>${userData.name || userData.login}</h2>
+                        <p>${userData.bio || ''}</p>
+                        <p>${userData.public_repos} public repositories</p>
+                    </div>
+                </div>
+            `;
+        userDisplay.style.display = 'block';
+    }
+
+    function displayResults(data) {
+        const count = data.length;
+        repoCount.textContent = `Found ${count} repositories`;
+
+        // Format the JSON with indentation for better readability
+        const formattedJson = JSON.stringify(data, null, 2);
+        jsonResult.textContent = formattedJson;
+
+        resultContainer.style.display = 'block';
+    }
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+        resultContainer.style.display = 'none';
+        userDisplay.style.display = 'none';
+        loading.style.display = 'none';
+    }
+
+    function getFriendlyErrorMessage(error, userId) {
+        const errorText = error.message || 'An unknown error occurred';
+
+        if (errorText.includes('404')) {
+            return `The GitHub user '${userId}' could not be found. Please check the username and try again.`;
+        } else if (errorText.includes('403')) {
+            return 'GitHub API rate limit exceeded. Please try again later.';
+        } else if (errorText.includes('Network error')) {
+            return 'Unable to connect to GitHub. Please check your internet connection and try again.';
+        } else {
+            return `Error fetching GitHub repositories: ${errorText}`;
+        }
+    }
+</script>
+</body>
+</html>
