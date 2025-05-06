@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Number Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            height: 1.5em;
+        }
+        .lucky-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .date-time {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Lucky Number Generator</h1>
+
+    <div class="date-time" id="current-datetime">Current Date & Time: Loading...</div>
+
+    <div class="input-group">
+        <label for="name">Enter your name:</label>
+        <input type="text" id="name" placeholder="Type your name here">
+    </div>
+
+    <button id="generate-btn">Generate My Lucky Number</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    // Update date and time
+    function updateDateTime() {
+        const now = new Date();
+        const options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        document.getElementById('current-datetime').textContent =
+            'Current Date & Time: ' + now.toLocaleDateString('en-US', options);
+    }
+
+    // Generate the lucky number
+    function generateLuckyNumber() {
+        const nameInput = document.getElementById('name').value.trim();
+
+        if (nameInput === '') {
+            document.getElementById('result').innerHTML =
+                'Please enter your name first!';
+            return;
+        }
+
+        // Get current date components
+        const now = new Date();
+        const day = now.getDate();
+        const month = now.getMonth() + 1;
+        const year = now.getFullYear();
+        const hour = now.getHours();
+        const minute = now.getMinutes();
+
+        // Calculate name value by summing character codes
+        let nameValue = 0;
+        for (let i = 0; i < nameInput.length; i++) {
+            nameValue += nameInput.charCodeAt(i);
+        }
+
+        // Generate lucky number using date, time and name
+        const seedValue = day + month + year + hour + minute + nameValue;
+
+        // Use a custom algorithm to get a number between 1 and 100
+        const luckyNumber = (seedValue % 100) + 1;
+
+        // Display the result
+        document.getElementById('result').innerHTML =
+            'Your lucky number is: <span class="lucky-number">' +
+            luckyNumber + '</span>';
+    }
+
+    // Set up event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        // Update date/time immediately and every second
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        // Button click event
+        document.getElementById('generate-btn').addEventListener('click', generateLuckyNumber);
+
+        // Enter key press event
+        document.getElementById('name').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateLuckyNumber();
+            }
+        });
+    });
+</script>
+</body>
+</html>
