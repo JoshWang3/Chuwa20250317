@@ -1,0 +1,79 @@
+1. List all of the annotations you learned from this class session.
+2. Explain tight coupling vs loose coupling and what does Spring IOC do?
+tight coupling:
+One class creates or depends direcly on another class
+Makes it hard to change, test, or reuse
+class Car {
+  Engine engine = new Engine(); 
+}
+loose coupling:
+One class relies on an interface or abstraction class
+Makes it flesible, testable, and resuable.
+class Car {
+    Engine engine;
+    Car(Engine engine) { this.engine = engine; }
+}
+Spring IOC:
+Inversion of control, unlike common Java code, engineer creates and controls objects by new. Spring creates and injects beans(objects) automatically. 
+Helps us build loopse coupling system.
+beans are loose coupling
+easy to switch implementations like @Primary, @Qualifier, etc
+easy to test, Spring can inject mock beans
+3. What is MVC pattern?
+MVC stands for Model-View-Controller. It's a design pattern that helps us organize code in web applications by separating business logic, UI, and user input.
+Components
+Model: Holds the data and business logic. In Spring, Java classes like User, Post are models.
+View: Displays data to the user (UI). In Spring, HTML, JSP are views.
+Controller: Handles user input, updates the model, and selects the view. In Spring, a class with @Controller that maps requests like /users is a controller, it handels the http request.
+
+Flow of MVC
+In the view, the user clicks a button or sends a request → goes to the controller.
+The controller talks to the model; the model gets or updates data.
+The model sends data back.
+The controller gives data to the view.
+The view renders the result as a webpage.
+
+4. What is Front-Controller?
+A Front-Controller is a single entry point for handling all incoming client requests in a web application. In Spring, the Front-Controller is the DispatcherServlet
+5. Explain DispatcherServlet and how it works.
+DispatcherServlet work flow
+Client sends request (e.g. GET /users)
+DispatcherServlet receives it (acts as the Front-Controller)
+Finds the correct controller
+Matches URL + HTTP method → calls controller method
+Controller processes the request
+May call service/model, prepares data
+Controller returns a view name + model data, or just data (JSON)
+DispatcherServlet handles the result
+If view name → passes to ViewResolver
+If data → uses HttpMessageConverter
+Renders response
+View becomes HTML
+data becomes JSON
+Response sent to client
+6. What is JSP and What is Model And View？
+JSP stands for JavaServer Pages
+It’s a view technology used to build dynamic web pages in Java web apps.
+It allows mixing HTML + Java code to display content based on backend data.
+What is Model and View?
+In Spring MVC, the controller returns both
+
+Model: the data to display
+View: the name of the page to render(eg. userList.jsp)
+Spring uses ModelAndView to wrap both together
+7. Explain servlet and servlet container, name some servlet implementations and servlet containers other than tomcat
+Servlet
+A Servlet is a Java class that handles HTTP requests and responses.
+It runs on the server and builds dynamic web content (like HTML, JSON).
+Write it by extending HttpServlet and overriding methods like doGet() or doPost().
+
+A Servlet Container is part of a web server that:
+Loads and runs servlet classes
+Manages servlet lifecycle (init → service → destroy)
+Handles HTTP requests and forwards them to the correct servlet
+
+Servlet Implementations
+Actual Java classes that implement the servlet API:
+
+GenericServlet
+HttpServlet
