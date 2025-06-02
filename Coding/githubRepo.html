@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GitHub Repos Fetcher</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      max-width: 800px;
+      margin: auto;
+      text-align: center;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+    }
+    button {
+      padding: 10px 16px;
+      font-size: 16px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    #output {
+      margin-top: 30px;
+      white-space: pre-wrap;
+      text-align: left;
+      background: #eaeaea;
+      padding: 20px;
+      border-radius: 6px;
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>GitHub Repo Fetcher</h1>
+  <p>Enter a GitHub user ID to fetch public repositories:</p>
+
+  <input type="text" id="username" placeholder="Enter a GitHub user ID (e.g. CharlieYin)" />
+  <button onclick="fetchReposAsync()">Fetch (async/await)</button>
+  <button onclick="fetchReposWithThen()">Fetch (.then/.catch)</button>
+
+  <div id="output"></div>
+
+  <script>
+    const output = document.getElementById("output");
+
+    // Method 1: Using async/await
+    async function fetchReposAsync() {
+      output.style.visibility = "visible";
+      const user = document.getElementById("username").value.trim();
+      if (!user) {
+        output.textContent = "Please enter a GitHub username.";
+        return;
+      }
+
+      const url = `https://api.github.com/users/${user}/repos`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`GitHub API error (${response.status}): ${response.statusText}`);
+        }
+        const data = await response.json();
+        output.textContent = "Using async/await:\n\n" + JSON.stringify(data, null, 4);
+      } catch (error) {
+        output.textContent = `Failed to fetch data. Reason: ${error.message}`;
+      }
+    }
+
+    // Method 2: Using Promises (.then/.catch)
+    function fetchReposWithThen() {
+      output.style.visibility = "visible";
+      const user = document.getElementById("username").value.trim();
+      if (!user) {
+        output.textContent = "Please enter a GitHub username.";
+        return;
+      }
+
+      const url = `https://api.github.com/users/${user}/repos`;
+
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`GitHub API error (${response.status}): ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          output.textContent = "Using Promises (.then/.catch):\n\n" + JSON.stringify(data, null, 4);
+        })
+        .catch((error) => {
+          output.textContent = `Failed to fetch data. Reason: ${error.message}`;
+        });
+    }
+  </script>
+
+</body>
+</html>
