@@ -1,0 +1,32 @@
+package com.chuwa.tutorial.t08_multithreading.c02_basic_thread_handling;
+
+/**
+ * @author b1go
+ * @date 3/21/22 9:20 AM
+ * @description 调用t.join()的线程(main)会stop，等待t线程运行完之后调用者(main线程)再继续运行
+ */
+public class JoinTest {
+    public static void main(String[] args) {
+        Thread t = new Thread(() -> {
+            System.out.println("Thread start");
+            try {
+                Thread.sleep(2000); // question, who sleep?  Answer: t线程
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Thread end");
+        });
+
+        System.out.println("Main start");
+        t.start();
+        try {
+            System.out.println("Main thread is stopped and waiting for t thread end");
+            t.join();   // main thread wait for t thread end. main thread's status is Timed Waiting.
+            //超时等待状态（timed waiting), 当线程在等待某个条件的发生并且有一个指定的超时时间时进入此状态。
+            System.out.println("Main thread continues...");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("Main stop");
+    }
+}
